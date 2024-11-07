@@ -3,4 +3,22 @@
     height: 1000px;
     background-color: #ffffff;
     box-shadow:  0 0 50px 0 #666666;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.App .todo__content {
+    flex: 1 0 auto;
+}
+
+.App .todo__footer {
+    flex: 0 0 auto;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: end;
+}
+
+.App .todo__footer .todo__footer__addBtn {
+    border-radius: 50%;
 }

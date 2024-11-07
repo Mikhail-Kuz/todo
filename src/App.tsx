@@ -1,11 +1,24 @@
 import React from 'react';
+
+import { Button, SearchInput, Title } from './components';
+import { ReactComponent as Plus} from './assets/icons/plus.svg';
+
 import './styles/App.css';
-import { Title } from './components';
 
 const App = (): JSX.Element => {
     return (
         <div className="App">
-            <Title>Todo list</Title>
+            <div className='todo__header'>
+                <Title>Todo list</Title>
+                <SearchInput placeholder='Поиск записи...' />
+                
+            </div>
+            <div className='todo__content'>
+
+            </div>
+            <div className='todo__footer'>
+                <Button className='todo__footer__addBtn'><Plus /></Button>
+            </div>
         </div>
     );
 }
