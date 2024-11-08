@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, SearchInput, Title, Select, Checkbox, Modal } from './components';
+import { Button, Input, Title, Select, Checkbox, Modal } from './components';
 import { SelectValue } from './components/Select';
 import { ReactComponent as Plus} from './assets/icons/plus.svg';
 import { ReactComponent as Delete} from './assets/icons/delete.svg';
@@ -21,6 +21,12 @@ const selectOptions: SelectValue[] = [
     { key: 3, value: 3, label: 'Выполненные' }
 ];
 
+const initEditedTodo: ITodo = {
+    id: 0,
+    text: '',
+    completed: false,
+};
+
 const App = (): JSX.Element => {
     
     const [filters, setFilters] = React.useState<FilterState>({ searchValue: '', selectValue: selectOptions[0] });
@@ -32,12 +38,62 @@ const App = (): JSX.Element => {
         return setModalVisible(!modalVisible);
     };
 
+    const handleCancel = (): void => {
+        setEditedTodo(initEditedTodo);
+        return setModalVisible(false);
+    };
+
+
+
+    /*
+        МЕТОДЫ РАБОТЫ С ЗАПИСЯМИ:
+    */
+
+    const [editedTodo, setEditedTodo] = React.useState<ITodo>(initEditedTodo);
+    
+    const handleChangeTextTodo = (e: React.ChangeEvent): void => {
+        return setEditedTodo({
+            ...editedTodo,
+            text: (e.target as HTMLInputElement).value,
+        });
+    };
+
+    const handleChangeChecked = (id: number) => (): void => {
+        const index = todos.findIndex(i => i.id === id);
+        
+        if (!!~index) {
+            const 
+                newTodo: ITodo = {
+                    ...todos[index],
+                    completed: !todos[index].completed
+                },
+                newTodos = todos.toSpliced(index, 1, newTodo);
+            return setTodos(newTodos);
+        }
+
+        return;
+    };
+    
+    const handleCreateTodo = (): void => {
+        const newTodo = {
+            ...editedTodo,
+            id: Date.now()
+        };
+        setTodos([ ...todos, newTodo ]);
+        return handleCancel();
+    };
+
+    const handleDeleteTodo = (id: number) => (): void => {
+        const newTodos = todos.filter(i => i.id !== id);
+        return setTodos(newTodos); 
+    };
+
     return (
         <div className="App">
             <div className='todo__header'>
                 <Title>Todo list</Title>
                 <div className='todo__header__filter'>
-                    <SearchInput className='todo__header__filter-search' placeholder='Поиск записи...' />
+                    <Input className='todo__header__filter-search' placeholder='Поиск записи...' />
                     <Select 
                         className='todo__header__filter-select' 
                         value={filters.selectValue} 
@@ -48,17 +104,19 @@ const App = (): JSX.Element => {
             <div className='todo__content'>
                 { todos.map(item => 
                     <div className='todo__content__item' key={item.id}>
-                        <Checkbox type='checkbox' defaultChecked={item.completed} />
+                        <Checkbox type='checkbox' checked={item.completed} onChange={handleChangeChecked(item.id)} />
                         <p className='todo__content__item-label'>{item.text}</p>
                         <Button className='todo__content__item-btn' ghost><Edit /></Button>
-                        <Button className='todo__content__item-btn' ghost><Delete /></Button>
+                        <Button className='todo__content__item-btn' ghost onClick={handleDeleteTodo(item.id)}><Delete /></Button>
                     </div>
                 )}
             </div>
             <div className='todo__footer'>
                 <Button className='todo__footer__addBtn' onClick={handleViewModal}><Plus /></Button>
             </div>
-            {modalVisible && <Modal></Modal>}
+            <Modal title='Создание записи' visible={modalVisible} setVisible={setModalVisible} okText='Создать' onOk={handleCreateTodo} onCancel={handleCancel}>
+                <Input placeholder='Название записи' value={editedTodo.text} onChange={handleChangeTextTodo} />
+            </Modal>
         </div>
     );
 }

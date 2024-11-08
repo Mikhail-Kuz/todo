@@ -37,7 +37,7 @@
 
 .App .todo__content__item {
     display: flex;
-    height: 65px;
+    min-height: 65px;
     align-items: center;
     border-bottom: 1px solid #6f00ff;
     padding: 12px 0;
@@ -45,6 +45,8 @@
 }
 
 .App .todo__content__item-label {
+    width: calc(100% - 160px);
+    text-align: justify;
     margin-left: 20px;
     font-size: 16px;
     font-weight: 500;
