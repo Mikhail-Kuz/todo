@@ -15,6 +15,8 @@ type FilterState = {
     selectValue: SelectValue;
 };
 
+type ModalType = 'new' | 'edit';
+
 const selectOptions: SelectValue[] = [
     { key: 1, value: 1, label: 'Все' }, 
     { key: 2, value: 2, label: 'Активные' }, 
@@ -34,7 +36,16 @@ const App = (): JSX.Element => {
 
 
     const [modalVisible, setModalVisible] = React.useState(false);
-    const handleViewModal = (): void => {
+    const [modalType, setModalType] = React.useState<ModalType>('new');
+    
+    const handleViewModal = (type: ModalType, item?: ITodo) => (e: React.SyntheticEvent): void => {
+        e.stopPropagation();
+        setModalType(type);
+        
+        if (item) {
+            setEditedTodo(item);
+        }
+        
         return setModalVisible(!modalVisible);
     };
 
@@ -75,15 +86,26 @@ const App = (): JSX.Element => {
     };
     
     const handleCreateTodo = (): void => {
-        const newTodo = {
-            ...editedTodo,
-            id: Date.now()
-        };
-        setTodos([ ...todos, newTodo ]);
+        if (modalType === 'new') {
+            const newTodo = {
+                ...editedTodo,
+                id: Date.now()
+            };
+
+            setTodos([ ...todos, newTodo ]);
+        } else {
+            const 
+                index = todos.findIndex(i => i.id === editedTodo.id),
+                newTodos = todos.toSpliced(index, 1, editedTodo);
+
+            setTodos(newTodos);
+        }
         return handleCancel();
     };
 
-    const handleDeleteTodo = (id: number) => (): void => {
+    const handleDeleteTodo = (id: number) => (e: React.SyntheticEvent): void => {
+        e.stopPropagation();
+
         const newTodos = todos.filter(i => i.id !== id);
         return setTodos(newTodos); 
     };
@@ -103,20 +125,28 @@ const App = (): JSX.Element => {
             </div>
             <div className='todo__content'>
                 { todos.map(item => 
-                    <div className='todo__content__item' key={item.id}>
-                        <Checkbox type='checkbox' checked={item.completed} onChange={handleChangeChecked(item.id)} />
+                    <div className='todo__content__item' key={item.id} onClick={handleChangeChecked(item.id)}>
+                        <Checkbox type='checkbox' checked={item.completed} />
                         <p className='todo__content__item-label'>{item.text}</p>
-                        <Button className='todo__content__item-btn' ghost><Edit /></Button>
+                        <Button className='todo__content__item-btn' ghost onClick={handleViewModal('edit', item)}><Edit /></Button>
                         <Button className='todo__content__item-btn' ghost onClick={handleDeleteTodo(item.id)}><Delete /></Button>
                     </div>
                 )}
             </div>
             <div className='todo__footer'>
-                <Button className='todo__footer__addBtn' onClick={handleViewModal}><Plus /></Button>
+                <Button className='todo__footer__addBtn' onClick={handleViewModal('new')}><Plus /></Button>
             </div>
-            <Modal title='Создание записи' visible={modalVisible} setVisible={setModalVisible} okText='Создать' onOk={handleCreateTodo} onCancel={handleCancel}>
-                <Input placeholder='Название записи' value={editedTodo.text} onChange={handleChangeTextTodo} />
+            <Modal 
+                title={`${modalType === 'new' ? 'Создание' : 'Редактирование'} записи`} 
+                visible={modalVisible} 
+                setVisible={setModalVisible} 
+                okText={modalType === 'new' ? 'Создать' : 'Изменить'} 
+                onOk={handleCreateTodo}
+                onCancel={handleCancel}
+            >
+                    <Input placeholder='Название записи' value={editedTodo.text} onChange={handleChangeTextTodo} />
             </Modal>
+            
         </div>
     );
 }
