@@ -14,3 +14,9 @@
 .button:hover {
     cursor: pointer;
 }
+
+.button.ghost {
+    background-color: #ffffff;
+    color: #6f00ff;
+    font-size: 20px;
+}

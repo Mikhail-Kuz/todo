@@ -14,3 +14,7 @@
     height: 100vh;
     background-color: #9dbcff;
 }
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
