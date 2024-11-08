@@ -8,6 +8,19 @@
     flex-direction: column;
 }
 
+.App .todo__header__filter {
+    display: flex;
+}
+
+.App .todo__header__filter-search {
+    width: 100%;
+    margin-right: 20px;
+}
+
+.App .todo__header__filter-select {
+    width: 280px;
+}
+
 .App .todo__content {
     flex: 1 0 auto;
 }

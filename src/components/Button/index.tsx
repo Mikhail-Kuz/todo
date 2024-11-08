@@ -9,7 +9,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = (props: IButtonProps): JSX.Element => {
     return (
-        <button className={classNames(cl.button, props.className)}>{props.children}</button>
+        <button className={classNames(cl.button, props.className)} onClick={props.onClick}>{props.children}</button>
     );
 }
 

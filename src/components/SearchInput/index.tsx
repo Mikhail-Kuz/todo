@@ -9,7 +9,7 @@ interface ISearchInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const SearchInput = (props: ISearchInputProps): JSX.Element => {
     return (
-        <div className={classNames(cl.input, props.className)}>
+        <div className={classNames(cl.searchInput, props.className)}>
             <input type='text' {...props} />
         </div>
     );
