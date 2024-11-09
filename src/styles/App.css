@@ -44,6 +44,11 @@
     cursor: pointer;
 }
 
+.App .todo__content__item input:checked + .todo__content__item-label {
+    text-decoration: line-through;
+    color: #a6a6a6;
+}
+
 .App .todo__content__item-label {
     width: calc(100% - 160px);
     text-align: justify;
