@@ -88,7 +88,7 @@ const App = (): JSX.Element => {
     const handleChangeTextTodo = (e: React.ChangeEvent): void => {
         return setEditedTodo({
             ...editedTodo,
-            text: (e.target as HTMLInputElement).value.trim(),
+            text: (e.target as HTMLInputElement).value,
         });
     };
 
@@ -110,16 +110,17 @@ const App = (): JSX.Element => {
     
     const handleCreateTodo = (): void => {
         if (modalType === 'new') {
-            const newTodo = {
+            const newTodo: ITodo = {
                 ...editedTodo,
-                id: Date.now()
+                id: Date.now(),
+                text: editedTodo.text.trim()
             };
 
             setTodos([ ...todos, newTodo ]);
         } else {
             const 
                 index = todos.findIndex(i => i.id === editedTodo.id),
-                newTodos = todos.toSpliced(index, 1, editedTodo);
+                newTodos = todos.toSpliced(index, 1, { ...editedTodo, text: editedTodo.text.trim() });
 
             setTodos(newTodos);
         }
