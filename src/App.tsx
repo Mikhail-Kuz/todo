@@ -49,7 +49,7 @@ const App = (): JSX.Element => {
     const [filterdTodos, setFilteredTodos] = React.useState<ITodo[]>([]);
 
     React.useEffect(() => {
-        const searchedTodos = [ ...todos.filter(i => !!~i.text.indexOf(filters.searchValue)) ];
+        const searchedTodos = [ ...todos.filter(i => !!~i.text.indexOf(filters.searchValue.trim())) ];
         
         if (filters.selectValue.value === 'all') setFilteredTodos(searchedTodos);
         else if (filters.selectValue.value === 'active') setFilteredTodos(searchedTodos.filter(i => !i.completed));
@@ -88,7 +88,7 @@ const App = (): JSX.Element => {
     const handleChangeTextTodo = (e: React.ChangeEvent): void => {
         return setEditedTodo({
             ...editedTodo,
-            text: (e.target as HTMLInputElement).value,
+            text: (e.target as HTMLInputElement).value.trim(),
         });
     };
 
@@ -166,6 +166,7 @@ const App = (): JSX.Element => {
                 setVisible={setModalVisible} 
                 okText={modalType === 'new' ? 'Создать' : 'Изменить'} 
                 onOk={handleCreateTodo}
+                okDisabled={!editedTodo.text.trim()}
                 onCancel={handleCancel}
             >
                     <Input placeholder='Название записи' value={editedTodo.text} onChange={handleChangeTextTodo} />

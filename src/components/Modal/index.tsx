@@ -15,10 +15,11 @@ interface IModalProps extends PropsWithChildren, AllHTMLAttributes<HTMLDivElemen
     okText?: string;
     onOk?: () => void;
     onCancel?: () => void;
+    okDisabled?: boolean;
 }
 
 const Modal = (props: IModalProps): JSX.Element => {
-    const { title, visible, setVisible, cancelText = 'Отмена', okText = 'Ок', onCancel, onOk } = props;
+    const { title, visible, setVisible, cancelText = 'Отмена', okText = 'Ок', onCancel, onOk, okDisabled = false } = props;
 
     const handleClose = (): void => {
         return setVisible(false);
@@ -34,7 +35,7 @@ const Modal = (props: IModalProps): JSX.Element => {
                 <div className={cl.modal__window__content}>{ props.children }</div>
                 <div className={cl.modal__window__footer}>
                     <Button className={cl.modal__window__footer_btn} ghost onClick={onCancel || handleClose}>{cancelText}</Button>
-                    <Button className={cl.modal__window__footer_btn} onClick={onOk}>{okText}</Button>
+                    <Button className={cl.modal__window__footer_btn} onClick={onOk} disabled={okDisabled}>{okText}</Button>
                 </div>
             </div>
         </div>

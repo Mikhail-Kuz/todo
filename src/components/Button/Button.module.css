@@ -20,3 +20,8 @@
     color: #6f00ff;
     font-size: 20px;
 }
+
+.button:disabled {
+    cursor: not-allowed;
+    background-color: #c9c9c9;
+}
