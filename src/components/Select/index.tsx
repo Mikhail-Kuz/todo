@@ -18,10 +18,11 @@ interface ISelectProps {
     options: SelectValue[];
     className?: string | undefined;
     visible?: boolean;
+    onChange?: (value: SelectValue) => void;
 }
 
 const Select = (props: ISelectProps): JSX.Element => {
-    const { className, value, options, visible = false } = props;
+    const { className, value, options, visible = false, onChange } = props;
 
     const [selectedValue, setSelectedValue] = React.useState(value);
     const [show, setShow] = React.useState(visible);
@@ -32,6 +33,7 @@ const Select = (props: ISelectProps): JSX.Element => {
 
     const handleChange = (item: SelectValue) => (): void => {
         setShow(!show);
+        onChange && onChange(item);
         return setSelectedValue(item);
     };
 

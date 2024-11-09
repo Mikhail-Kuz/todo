@@ -18,9 +18,9 @@ type FilterState = {
 type ModalType = 'new' | 'edit';
 
 const selectOptions: SelectValue[] = [
-    { key: 1, value: 1, label: 'Все' }, 
-    { key: 2, value: 2, label: 'Активные' }, 
-    { key: 3, value: 3, label: 'Выполненные' }
+    { key: 1, value: 'all', label: 'Все' }, 
+    { key: 2, value: 'active', label: 'Активные' }, 
+    { key: 3, value: 'completed', label: 'Выполненные' }
 ];
 
 const initEditedTodo: ITodo = {
@@ -32,7 +32,30 @@ const initEditedTodo: ITodo = {
 const App = (): JSX.Element => {
     
     const [filters, setFilters] = React.useState<FilterState>({ searchValue: '', selectValue: selectOptions[0] });
+    const handleChangeSelect = (value: SelectValue): void => {
+        return setFilters({
+            ...filters,
+            selectValue: value
+        });
+    };
+    const handleChangeSearch = (e: React.ChangeEvent): void => {
+        return setFilters({
+            ...filters,
+            searchValue: (e.target as HTMLInputElement).value
+        });
+    };
+
     const [todos, setTodos] = React.useState<ITodo[]>([]);
+    const [filterdTodos, setFilteredTodos] = React.useState<ITodo[]>([]);
+
+    React.useEffect(() => {
+        const searchedTodos = [ ...todos.filter(i => !!~i.text.indexOf(filters.searchValue)) ];
+        
+        if (filters.selectValue.value === 'all') setFilteredTodos(searchedTodos);
+        else if (filters.selectValue.value === 'active') setFilteredTodos(searchedTodos.filter(i => !i.completed));
+        else if (filters.selectValue.value === 'completed') setFilteredTodos(searchedTodos.filter(i => i.completed));
+
+    }, [todos, filters]);
 
 
     const [modalVisible, setModalVisible] = React.useState(false);
@@ -115,16 +138,17 @@ const App = (): JSX.Element => {
             <div className='todo__header'>
                 <Title>Todo list</Title>
                 <div className='todo__header__filter'>
-                    <Input className='todo__header__filter-search' placeholder='Поиск записи...' />
+                    <Input className='todo__header__filter-search' placeholder='Поиск записи...' value={filters.searchValue} onChange={handleChangeSearch} />
                     <Select 
                         className='todo__header__filter-select' 
                         value={filters.selectValue} 
-                        options={selectOptions} 
+                        options={selectOptions}
+                        onChange={handleChangeSelect}
                     />
                 </div>
             </div>
             <div className='todo__content'>
-                { todos.map(item => 
+                { filterdTodos.map(item => 
                     <div className='todo__content__item' key={item.id} onClick={handleChangeChecked(item.id)}>
                         <Checkbox type='checkbox' checked={item.completed} />
                         <p className='todo__content__item-label'>{item.text}</p>
