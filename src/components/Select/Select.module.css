@@ -1,4 +1,5 @@
 .select {
+    position: relative;
     display: flex;
     flex-direction: column;
 }
@@ -28,6 +29,10 @@
 }
 
 .select .select__options {
+    position: absolute;
+    top: 40px;
+    width: 100%;
+    background-color: #ffffff;
     margin-top: 5px;
     box-shadow: 0 0 10px 0 #666666;
     border-radius: 5px;
